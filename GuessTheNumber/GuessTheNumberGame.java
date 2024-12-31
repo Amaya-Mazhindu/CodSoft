@@ -7,14 +7,16 @@ public class GuessTheNumberGame {
 
         Random random = new Random();
         
+        System.out.println("**Welcome to Guess the Number**");
         
-        System.out.println("Welcome to Guess the Number!");
-        System.out.println("Choose your mode:");
-        System.out.println("1. Survival");
-        System.out.println("2. Leisure");
+        System.out.println("   Choose your mode:   ");
+        System.out.println("-----------------------");
+        System.out.println("   1. Survival ");
+        System.out.println("   2. Leisure  ");
+        System.out.println("-----------------------");
         System.out.print("Enter your choice (1 or 2): ");
         
-        int mode = scanner.nextInt();
+        int mode  = getValidIntegerInput(scanner);
         
        
         if (mode != 1 && mode != 2) {
@@ -27,9 +29,15 @@ public class GuessTheNumberGame {
         
         int Bingo = random.nextInt(100) + 1;
         // generates a random number between 1 and 100
+        /* 
+         * Fix first error for when a user inputs a letter instead of number
+         * figure out how to make sure that the
+        */
         int guess = 0;
         int attempts = 0;
         boolean GuessedItRight = false;
+
+        
         
         if (mode == 1) {
             
@@ -42,11 +50,22 @@ public class GuessTheNumberGame {
              */
 
             
-            System.out.println("Survival mode selected! You have " + max_Attempts + " attempts to guess the number.");
+            System.out.println("  Survival mode selected! You have " + max_Attempts + " attempts to guess the number.  ");
             
             while (attempts < max_Attempts && !GuessedItRight) {
                 System.out.print("Enter your guess (1-100): ");
-                guess = scanner.nextInt();
+                guess = getValidIntegerInput(scanner);
+
+                /*
+                 * Fixed the guess error 
+                 * made sure that the guess is only allowed to be between a hundred and one
+                 */
+                 
+                while (guess < 1 || guess > 100) {
+                    System.out.println("Error: Please enter a number between 1 and 100.");
+                    System.out.print("Enter your guess (1-100): ");
+                    guess = getValidIntegerInput(scanner);  
+                }
                 attempts++;
                 
                 if (guess == Bingo ) {
@@ -86,20 +105,59 @@ public class GuessTheNumberGame {
             
             while (!GuessedItRight) {
                 System.out.print("Enter your guess (1-100): ");
-                guess = scanner.nextInt();
+                guess = getValidIntegerInput(scanner);
+
+                while (guess < 1 || guess > 100) {
+                    System.out.println("Error: Please enter a number between 1 and 100.");
+                    System.out.print("Enter your guess (1-100): ");
+                    guess = getValidIntegerInput(scanner); 
+
+                }
+
+                attempts++;
+                /*
+                 * now there is matching code for when both in leisure and survival modes 
+                 * fixed majority of the errors that you mentioned above 
+                 * debug to spot more errors
+                 */
                 
-                if (guess == Bingo ) {
+                if (guess == Bingo) {
                     GuessedItRight = true;
-                } else if (guess < Bingo ) {
-                    System.out.println("Oops you just fell too short!!  Try again.");
                 } else {
-                    System.out.println("That's higher than a giraffe's neck! Try again.");
+                    if (Math.abs(guess - Bingo) <= 5) {
+                        System.out.println("Getting hot!!!!!!");
+                    } 
+                    else if (guess > Bingo) {
+                        System.out.println("That's higher than a giraffe's neck! Try again.");
+                    } 
+                    else {  
+                        System.out.println("Oops you just fell too short!! Try again.");
+                    }
                 }
             }
             
             System.out.println("Congratulations you genius! You guessed the correct number.");
+            System.out.println("Hooray!! It took you " + attempts +  " attempts to guess the correct integer");
+
+
+            scanner.close(); }
         }
+
         
-        scanner.close();
+            
+         
+
+    private static int getValidIntegerInput(Scanner scanner) {
+
+        /*
+         * makes sure all the user inputs are digits if they are not digits then an error message is printed out
+         */
+        while (!scanner.hasNextInt()) {
+            System.out.println("Error: Please enter a valid input.");
+            scanner.next();  
+        }
+        return scanner.nextInt();
     }
+
+
 }
